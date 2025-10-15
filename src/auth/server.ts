@@ -2,7 +2,9 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 export async function createClient() {
-  const cookieStore = cookies();
+  // Next.js 15 temporarily requires coercing cookies() to gain mutable access for Supabase session syncing.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cookieStore = (await cookies()) as any;
 
   const client = createServerClient(
     process.env.SUPABASE_URL!,
