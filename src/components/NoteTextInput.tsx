@@ -14,7 +14,8 @@ type Props = {
 let updateTimeout: NodeJS.Timeout;
 
 function NoteTextInput({ noteId, startingNoteText }: Props) {
-  const noteIdParam = useSearchParams().get("noteId") || "";
+  const searchParams = useSearchParams();
+  const noteIdParam = searchParams?.get("noteId") || "";
   const { noteText, setNoteText } = useNote();
 
   useEffect(() => {

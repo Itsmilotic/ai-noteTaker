@@ -312,16 +312,20 @@ ${formattedNotes}
     const jsonCandidate = jsonMatch ? jsonMatch[0] : raw;
 
     try {
-      const parsed = JSON.parse(jsonCandidate);
+      const parsed = JSON.parse(jsonCandidate) as unknown;
       if (Array.isArray(parsed)) {
         return parsed
-          .map((item) => (typeof item === "string" ? item.trim() : ""))
+          .map((item: unknown) => (typeof item === "string" ? item.trim() : ""))
           .filter(Boolean);
       }
 
-      if (parsed && Array.isArray(parsed.questions)) {
-        return parsed.questions
-          .map((item) => (typeof item === "string" ? item.trim() : ""))
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        Array.isArray((parsed as { questions?: unknown[] }).questions)
+      ) {
+        return (parsed as { questions: unknown[] }).questions
+          .map((item: unknown) => (typeof item === "string" ? item.trim() : ""))
           .filter(Boolean);
       }
     } catch {

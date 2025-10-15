@@ -37,12 +37,13 @@ const TOAST_CONFIG: Record<string, ToastConfig> = {
 
 type ToastType = keyof typeof TOAST_CONFIG;
 
-function isToastType(value: string | null): value is ToastType {
-  return value !== null && value in TOAST_CONFIG;
+function isToastType(value: string | null | undefined): value is ToastType {
+  return value != null && value in TOAST_CONFIG;
 }
 
 function HomeToast() {
-  const toastType = useSearchParams().get("toastType");
+  const searchParams = useSearchParams();
+  const rawToastType = searchParams?.get("toastType");
   const { toast } = useToast();
 
   const removeUrlParam = () => {
@@ -53,14 +54,14 @@ function HomeToast() {
   };
 
   useEffect(() => {
-    if (isToastType(toastType)) {
+    if (isToastType(rawToastType)) {
       toast({
-        ...TOAST_CONFIG[toastType],
+        ...TOAST_CONFIG[rawToastType],
       });
 
       removeUrlParam();
     }
-  }, [toastType, toast]);
+  }, [rawToastType, toast]);
 
   return null;
 }

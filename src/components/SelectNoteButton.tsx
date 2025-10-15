@@ -12,7 +12,8 @@ type Props = {
 };
 
 function SelectNoteButton({ note }: Props) {
-  const noteId = useSearchParams().get("noteId") || "";
+  const searchParams = useSearchParams();
+  const noteId = searchParams?.get("noteId") || "";
 
   const { noteText: selectedNoteText } = useNote();
   const [shouldUseGlobalNoteText, setShouldUseGlobalNoteText] = useState(false);

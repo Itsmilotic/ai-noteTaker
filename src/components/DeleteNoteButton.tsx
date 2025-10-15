@@ -26,7 +26,8 @@ type Props = {
 function DeleteNoteButton({ noteId, deleteNoteLocally }: Props) {
   const router = useRouter();
   const { toast } = useToast();
-  const noteIdParam = useSearchParams().get("noteId") || "";
+  const searchParams = useSearchParams();
+  const noteIdParam = searchParams?.get("noteId") || "";
 
   const [isPending, startTransition] = useTransition();
 
