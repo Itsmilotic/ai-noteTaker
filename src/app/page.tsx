@@ -1,5 +1,6 @@
 import { getUser } from "@/auth/server";
 import AskAIButton from "@/components/AskAIButton";
+import AnalyzePdfForm from "@/components/AnalyzePdfForm";
 import NewNoteButton from "@/components/NewNoteButton";
 import NoteTextInput from "@/components/NoteTextInput";
 import HomeToast from "@/components/HomeToast";
@@ -29,6 +30,8 @@ async function HomePage({ searchParams }: Props) {
       </div>
 
       <NoteTextInput noteId={noteId} startingNoteText={note?.text || ""} />
+
+      <AnalyzePdfForm user={user} />
 
       <HomeToast />
     </div>
