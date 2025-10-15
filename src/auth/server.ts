@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 export async function createClient() {
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
 
   const client = createServerClient(
     process.env.SUPABASE_URL!,
@@ -26,15 +26,35 @@ export async function createClient() {
   return client;
 }
 
+const isAuthSessionMissing = (error: unknown) => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "status" in error &&
+    (error as { status?: number }).status === 400
+  );
+};
+
 export async function getUser() {
   const { auth } = await createClient();
 
-  const userObject = await auth.getUser();
+  try {
+    const { data, error } = await auth.getUser();
 
-  if (userObject.error) {
-    console.error(userObject.error);
+    if (error) {
+      if (isAuthSessionMissing(error)) {
+        return null;
+      }
+      console.error(error);
+      return null;
+    }
+
+    return data.user;
+  } catch (error) {
+    if (isAuthSessionMissing(error)) {
+      return null;
+    }
+    console.error(error);
     return null;
   }
-
-  return userObject.data.user;
 }
